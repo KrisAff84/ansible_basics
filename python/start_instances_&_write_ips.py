@@ -62,7 +62,7 @@ def start_ec2_fleet(region, tag_name, tag_value):
     if instances_to_start:
         
         while instances_stopping > 0:
-            print('Waiting for instances to fully shut down...')
+            print('Waiting for instances to stop...')
             stopped_waiter = ec2.get_waiter('instance_stopped')
             stopped_waiter.wait(InstanceIds=instances_to_start)
             instances_stopping = 0
@@ -73,7 +73,14 @@ def start_ec2_fleet(region, tag_name, tag_value):
         )
         running_waiter = ec2.get_waiter('instance_running')
         running_waiter.wait(InstanceIds=instances_to_start)
+        print('Instances started successfully, waiting for status checks...')
+        status_waiter = ec2.get_waiter('instance_status_ok')
+        status_waiter.wait(InstanceIds=instances_to_start)
+        print('Status checks passed, instances ready for use.')
     
+    tagged_instances = ec2.describe_instances(
+        InstanceIds=instance_ids
+    )
     for reservation in tagged_instances['Reservations']:
         for instance in reservation['Instances']:
             for tag in instance['Tags']:
@@ -107,7 +114,7 @@ def write_public_ips(instance_ips, zshrc_file, first_line, inv_file):
         idx = 0
     
     for ip in instance_ips:
-        lines[idx] = f'ec2-user@{ip} \n'
+        lines[idx] = f'{ip} \n'
         idx += 1
     
     with open(inv_file, 'w') as file:
