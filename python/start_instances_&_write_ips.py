@@ -1,7 +1,20 @@
+'''
+This script starts all instances with the tag 'Type: ansible' and writes the public IPs to 
+the zshrc file and ansible inventory file. The zshrc file is used to provide variables for 
+easy SSH access to the instances. The ansible inventory file is used to provide the IPs to
+the ansible playbook.
+'''
+
 import boto3
 
 
 def start_ec2_fleet(region):
+    '''
+    This function will start all instances with the tag 'Type: ansible'
+    If instances are already running, it will simply return the instance ids
+    If the instances are stopped, the instances will be started and their 
+    ids returned. 
+    '''
     ec2 = boto3.client('ec2', region_name=region)
     tagged_instances = ec2.describe_instances(
         Filters=[
@@ -48,6 +61,7 @@ def start_ec2_fleet(region):
 
 
 def write_public_ips(instance_ids, zshrc_file, line_number1, line_number2, line_number3, inv_file):
+    # This function writes the public IPs provided by parameter instance_ids to the zshrc file and ansible inventory file
     ec2 = boto3.client('ec2')
     waiter = ec2.get_waiter('instance_running')
     new_ips = []
