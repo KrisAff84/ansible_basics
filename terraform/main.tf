@@ -38,6 +38,16 @@ resource "aws_instance" "ansible" {
   }
 }
 
+resource "null_resource" "ansible_provisioner" {
+  depends_on = [aws_instance.ansible]
+
+  provisioner "local-exec" {
+    working_dir = "../python"
+    command     = "python3 'start_instances_&_write_ips.py'"
+    on_failure  = continue
+  }
+}
+
 resource "aws_security_group" "ansible" {
   name        = "Ansible_SG"
   description = "Allow SSH, HTTP inbound traffic, and in network communication"
