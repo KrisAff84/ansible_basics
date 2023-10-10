@@ -114,7 +114,7 @@ def write_public_ips(instance_ips, zshrc_file, first_line, inv_file):
         idx = 0
     
     for ip in instance_ips:
-        lines[idx] = f'ec2-user@{ip} \n'
+        lines[idx] = f'{ip} \n'
         idx += 1
     
     with open(inv_file, 'w') as file:
