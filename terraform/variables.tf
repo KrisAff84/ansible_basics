@@ -20,3 +20,10 @@ variable "key_pair" {
   type        = string
   default     = "ansible_key"
 }
+
+variable "my_ip" {
+  description = "My IP address"
+  type        = string
+  default     = "24.162.52.74/32"
+
+}
