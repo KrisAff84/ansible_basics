@@ -87,7 +87,7 @@ def start_ec2_fleet(region, tag_name, tag_value):
                 if tag['Key'] == 'Name':
                     ip_index = tag['Value'].split('_')[-1]
                     instance_ips[int(ip_index) - 1] = instance['PublicIpAddress']
-
+    print(instance_ips)
     return instance_ips
 
 
@@ -96,11 +96,11 @@ def write_public_ips(instance_ips, zshrc_file, first_line, inv_file):
 
     with open(zshrc_file, 'r') as file:
         lines = file.readlines()
-        first_line -= 1
-        idx = 1
+
+    first_line -= 1
+    idx = 1
 
     for ip in instance_ips:
-
         lines[first_line] = f'ANode{idx}="ec2-user@{ip}" \n'
         first_line += 1
         idx += 1
@@ -111,7 +111,8 @@ def write_public_ips(instance_ips, zshrc_file, first_line, inv_file):
     
     with open(inv_file, 'r') as file:
         lines = file.readlines()
-        idx = 0
+
+    idx = 0
     
     for ip in instance_ips:
         lines[idx] = f'{ip} \n'
