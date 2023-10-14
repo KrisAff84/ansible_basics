@@ -16,6 +16,7 @@ def start_ec2_fleet(region, tag_name, tag_value):
     ids returned. 
     '''
     ec2 = boto3.client('ec2', region_name=region)
+    # Get all instances with the tag 'Type: ansible' that are not terminated
     tagged_instances = ec2.describe_instances(
         Filters=[
             {
@@ -44,12 +45,14 @@ def start_ec2_fleet(region, tag_name, tag_value):
 
     for reservation in tagged_instances['Reservations']:
         num_of_ips = len(reservation['Instances'])
+        # Create a list of placeholder values to be replaced with the public IPs
         for i in range(num_of_ips):
             instance_ips.append('placeholder')
+            
         for instance in reservation['Instances']:
             instance_id = instance['InstanceId']
             instance_state = instance['State']['Name']
-
+            
             if instance_state in ['running', 'pending']:
                 instance_ids.append(instance_id)
 
@@ -75,12 +78,15 @@ def start_ec2_fleet(region, tag_name, tag_value):
         running_waiter.wait(InstanceIds=instances_to_start)
         print('Instances started successfully, waiting for status checks...')
         status_waiter = ec2.get_waiter('instance_status_ok')
-        status_waiter.wait(InstanceIds=instances_to_start)
+        status_waiter.wait(InstanceIds=instance_ids)
         print('Status checks passed, instances ready for use.')
     
     tagged_instances = ec2.describe_instances(
         InstanceIds=instance_ids
     )
+    # This loop will replace the placeholder values with the public IPs
+    # The last character of the tag 'Name' is the index of the IP in the list
+    # Using this method ensures that trhe IPs are written to the correct index of the IP list
     for reservation in tagged_instances['Reservations']:
         for instance in reservation['Instances']:
             for tag in instance['Tags']:
