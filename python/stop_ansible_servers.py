@@ -15,14 +15,25 @@ def stop_ec2_instances(region, tag_name, tag_value):
                 'Values': [
                     tag_value
                 ]
+            },
+            {
+                'Name': 'instance-state-name',
+                'Values': [
+                    'running',
+                    'pending'
+                ]
             }
         ]
     )
-    for reservation in instance_ids['Reservations']:
-        for instance in reservation['Instances']:
-            instances_to_stop.append(instance['InstanceId'])
-
-    print(instances_to_stop)
+    # If instances are already stopped, print "Instances already stopped"
+    if not instance_ids['Reservations']:
+        print(f'Instances with with tag "{tag_name}": "{tag_value}" already stopped.')
+        return
+    else:
+        for reservation in instance_ids['Reservations']:
+            for instance in reservation['Instances']:
+                instances_to_stop.append(instance['InstanceId'])
+        print(f'Stopping instances with tag "{tag_name}": "{tag_value}"')
 
     response = ec2.stop_instances(
         InstanceIds=instances_to_stop

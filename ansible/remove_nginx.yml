@@ -25,42 +25,29 @@
   become: yes
   tasks:
 
-    - name: Install Python3
-      dnf: 
-        name: python3
-        state: latest
-        update_cache: yes
-
-    - name: Uninstall Gunicorn
+    - name: Remove Gunicorn
       pip:
         name: gunicorn
         state: absent
 
-    - name: Uninstall Python3-pip
+    - name: Remove Python3-pip
+      dnf: 
+        name: python3-pip
+        state: absent
+        update_cache: yes
+
+- hosts: django 
+  become: yes
+  tasks:
+
+    - name: Remove Django
+      pip:
+        name: django
+        state: absent 
+
+    - name: Remove Python3-pip
       dnf: 
         name: python3-pip
         state: absent
         update_cache: yes
         
-
-- hosts: flask 
-  become: yes
-  tasks:
-
-    - name: Install Python3
-      dnf: 
-        name: python3
-        state: latest
-        update_cache: yes
-
-    - name: Uninstall Flask
-      pip:
-        name: flask
-        state: absent 
-
-    - name: Uninstall Python3-pip
-      dnf: 
-        name: python3-pip
-        state: absent
-        update_cache: yes
-

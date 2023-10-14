@@ -15,6 +15,7 @@ def start_ec2_fleet(region, tag_name, tag_value):
     If the instances are stopped, the instances will be started and their 
     ids returned. 
     '''
+    print(f'Searching for instances with tag "{tag_name}" : "{tag_value}" in {region}...')
     ec2 = boto3.client('ec2', region_name=region)
     # Get all instances with the tag 'Type: ansible' that are not terminated
     tagged_instances = ec2.describe_instances(
