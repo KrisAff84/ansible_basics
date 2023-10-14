@@ -15,25 +15,11 @@
   become: yes
   tasks:
 
-    - name: Install Nginx
+    - name: Remove Nginx
       dnf: 
         name: nginx
-        state: latest
+        state: absent
         update_cache: yes
-
-    - name: Start Nginx
-      service:
-        name: nginx
-        state: started
-        enabled: yes
-
-    - name: Copy HTML files for website
-      copy:
-        src: index.html
-        dest: /usr/share/nginx/html/index.html
-        owner: root
-        group: root
-        mode: 0644
 
 - hosts: wsgi
   become: yes
@@ -45,16 +31,17 @@
         state: latest
         update_cache: yes
 
-    - name: Install Python3-pip
-      dnf: 
-        name: python3-pip
-        state: latest
-        update_cache: yes
-        
-    - name: Install Gunicorn
+    - name: Uninstall Gunicorn
       pip:
         name: gunicorn
-        state: latest
+        state: absent
+
+    - name: Uninstall Python3-pip
+      dnf: 
+        name: python3-pip
+        state: absent
+        update_cache: yes
+        
 
 - hosts: flask 
   become: yes
@@ -66,13 +53,14 @@
         state: latest
         update_cache: yes
 
-    - name: Install Python3-pip
-      dnf: 
-        name: python3-pip
-        state: latest
-        update_cache: yes
-
-    - name: Install Flask
+    - name: Uninstall Flask
       pip:
         name: flask
-        state: latest
+        state: absent 
+
+    - name: Uninstall Python3-pip
+      dnf: 
+        name: python3-pip
+        state: absent
+        update_cache: yes
+
