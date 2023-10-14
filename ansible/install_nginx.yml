@@ -56,7 +56,7 @@
         name: gunicorn
         state: latest
 
-- hosts: flask 
+- hosts: django 
   become: yes
   tasks:
 
@@ -72,7 +72,7 @@
         state: latest
         update_cache: yes
 
-    - name: Install Flask
+    - name: Install Django
       pip:
-        name: flask
+        name: django
         state: latest
