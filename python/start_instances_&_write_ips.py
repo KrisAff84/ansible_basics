@@ -138,7 +138,7 @@ def main():
     tag_value = 'ansible'
     zshrc_file ='/Users/Kris/.zshrc'
     first_line = 11
-    inv_file = '../ansible/inventory'
+    inv_file = '/Users/Kris/Git_Repos/ansible_basics/ansible/inventory'
     region = 'us-west-2'
     instance_ips = start_ec2_fleet(region, tag_name, tag_value)
     write_public_ips(instance_ips, zshrc_file, first_line, inv_file)
