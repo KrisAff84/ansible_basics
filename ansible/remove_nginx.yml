@@ -1,19 +1,6 @@
----
-
 - hosts: all
   become: yes
-  pre_tasks:
-
-    - name: Install Updates
-      dnf: 
-        name: '*'
-        state: latest
-        update_cache: yes
-      
-
-- hosts: webservers
-  become: yes
-  tasks:
+  tasks: 
 
     - name: Remove Nginx
       dnf: 
@@ -21,31 +8,7 @@
         state: absent
         update_cache: yes
 
-- hosts: wsgi
-  become: yes
-  tasks:
-
-    - name: Remove Gunicorn
-      pip:
-        name: gunicorn
-        state: absent
-
-    - name: Remove Python3-pip
-      dnf: 
-        name: python3-pip
-        state: absent
-        update_cache: yes
-
-- hosts: django 
-  become: yes
-  tasks:
-
-    - name: Remove Django
-      pip:
-        name: django
-        state: absent 
-
-    - name: Remove Python3-pip
+    - name: Remove pip
       dnf: 
         name: python3-pip
         state: absent
