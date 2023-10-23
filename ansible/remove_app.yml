@@ -10,15 +10,15 @@
         state: latest
         update_cache: yes
       
-- hosts: webservers
-  become: yes
-  tasks:
+# - hosts: webservers
+#   become: yes
+#   tasks:
 
-    - name: Remove Nginx
-      dnf: 
-        name: nginx
-        state: absent
-        update_cache: yes
+#     - name: Remove Nginx
+#       dnf: 
+#         name: nginx
+#         state: absent
+#         update_cache: yes
 
 - hosts: wsgi
   become: yes
